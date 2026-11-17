@@ -1,0 +1,254 @@
+[
+  {
+    "file": "notes/00-foundations.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/00-foundations.md",
+    "sourceVersion": "87899384b48f3ce904b6d2f2d0f7bc5dcf0387a9d8fe34c40f0d4de84a134e5b",
+    "sourceSha256": "87899384b48f3ce904b6d2f2d0f7bc5dcf0387a9d8fe34c40f0d4de84a134e5b",
+    "exportSha256": "80c8fa05550ea1f982ae19395af89fc22ddf17f2dc5fe83518d17738878c677b",
+    "exportedAt": "2026-11-17T07:09:45.221454+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/01-linear-shapes.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/01-linear-shapes.md",
+    "sourceVersion": "188fbcbb3485bf914fc782eac21bc3f0e4898600e3561081cbe257f556ff5b52",
+    "sourceSha256": "188fbcbb3485bf914fc782eac21bc3f0e4898600e3561081cbe257f556ff5b52",
+    "exportSha256": "b740be4d922550d7f03834ac0992f5cfd753b6d253330c4d5d5b59903bf35de7",
+    "exportedAt": "2026-11-17T07:09:45.223177+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/02-softmax-axis.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/02-softmax-axis.md",
+    "sourceVersion": "1398b4e762ce5ebccb3e4e5a948d9f6aa021d1a961ed550d71d9e7f39880fca9",
+    "sourceSha256": "1398b4e762ce5ebccb3e4e5a948d9f6aa021d1a961ed550d71d9e7f39880fca9",
+    "exportSha256": "fa3e118a226e5ecc0110c777b224cd220b0d7e95c958c3522f287874c129acb7",
+    "exportedAt": "2026-11-17T07:09:45.224183+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/03-target-probability.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/03-target-probability.md",
+    "sourceVersion": "2b5a1f86822b7c1818ac2e8349479b3d32113c31e2c6b02f6aa2d17840bc788f",
+    "sourceSha256": "2b5a1f86822b7c1818ac2e8349479b3d32113c31e2c6b02f6aa2d17840bc788f",
+    "exportSha256": "00cad1f03f52a7caa6c0bc0ac35f468415501ce8f6def7684563aef63e31fc88",
+    "exportedAt": "2026-11-17T07:09:45.225234+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/04-single-token-loss.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/04-single-token-loss.md",
+    "sourceVersion": "58b49cb568ccc29af92c6c54b4654a5ce0bcda45c60b1ca7aaa5f97398d601ef",
+    "sourceSha256": "58b49cb568ccc29af92c6c54b4654a5ce0bcda45c60b1ca7aaa5f97398d601ef",
+    "exportSha256": "95ad764da9746f41da5ddb540d48513f3975900c01fff41e1bdc737215e503ad",
+    "exportedAt": "2026-11-17T07:09:45.227270+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/05-mean-loss.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/05-mean-loss.md",
+    "sourceVersion": "c06ab7ec4d53c7d7741327e141a3336e68699f29fbb16ef7ef358882e752c920",
+    "sourceSha256": "c06ab7ec4d53c7d7741327e141a3336e68699f29fbb16ef7ef358882e752c920",
+    "exportSha256": "598cbebd38140ebee2d0e113c7d2cfd692130f04b4d0196a9200f723c82c8de9",
+    "exportedAt": "2026-11-17T07:09:45.228274+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/06-backward-gradient.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/06-backward-gradient.md",
+    "sourceVersion": "bb7a4f9263d1bba81fae5bb18d44cf0b04f206418f1d19124cc647525be4fdf7",
+    "sourceSha256": "bb7a4f9263d1bba81fae5bb18d44cf0b04f206418f1d19124cc647525be4fdf7",
+    "exportSha256": "6c64dedfe047a8490a21d58eb9b2f8b231576f8dda1f85754561cc743e0d5188",
+    "exportedAt": "2026-11-17T07:09:45.229447+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/07-optimizer-step.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/07-optimizer-step.md",
+    "sourceVersion": "458c546711e5bc1a216b2c7e47117a19785fe6e458486b65a8893131456804b1",
+    "sourceSha256": "458c546711e5bc1a216b2c7e47117a19785fe6e458486b65a8893131456804b1",
+    "exportSha256": "4cb2aec0aebab437fd2485758f04dbf5990e382b6b4b719fe46d98d3407a673a",
+    "exportedAt": "2026-11-17T07:09:45.231462+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/08-zero-grad.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/08-zero-grad.md",
+    "sourceVersion": "b95813366c8f5559cf3f3f76f534bdbc748a74d0102fc6cb50676fac61f71c5f",
+    "sourceSha256": "b95813366c8f5559cf3f3f76f534bdbc748a74d0102fc6cb50676fac61f71c5f",
+    "exportSha256": "15c26c331348e3ce9a43c9b3d0b9e3b984de5b3cd41ff5e0b1f93598dfd471fc",
+    "exportedAt": "2026-11-17T07:09:45.231975+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/09-training-loop.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/09-training-loop.md",
+    "sourceVersion": "6543254cf96f84d8b96b62450ad304777fe0586f30625a983e24f4db35f0dc7a",
+    "sourceSha256": "6543254cf96f84d8b96b62450ad304777fe0586f30625a983e24f4db35f0dc7a",
+    "exportSha256": "01a057dd70149cfdac8eeb9995c852eca2f779e416d15b9e82de07535aaf39f0",
+    "exportedAt": "2026-11-17T07:09:45.233492+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/10-tensor-numel.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/10-tensor-numel.md",
+    "sourceVersion": "5c14050df516d3909fb5055d9d500f536dd47681312e84cc7242e83edb24b3ae",
+    "sourceSha256": "5c14050df516d3909fb5055d9d500f536dd47681312e84cc7242e83edb24b3ae",
+    "exportSha256": "e36c85ae3bb3c33deb129cb6be2e53a6322e62de4a1b37e7eaa02b0f32146b10",
+    "exportedAt": "2026-11-17T07:09:45.234656+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/11-tensor-storage.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/11-tensor-storage.md",
+    "sourceVersion": "2d0a17d8acc0e1c015f331a6ac8a8a77a55326592264e38bc2bb760445e923f7",
+    "sourceSha256": "2d0a17d8acc0e1c015f331a6ac8a8a77a55326592264e38bc2bb760445e923f7",
+    "exportSha256": "28f72cb8de157cce94360bc122540dea6f07e6e8cdec7faf462b1fcfe037cf3c",
+    "exportedAt": "2026-11-17T07:09:45.235664+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/12-dtype-storage.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/12-dtype-storage.md",
+    "sourceVersion": "6bce1bc6f4a3bc9469a20d81ac8c4ed59a96a6e9c82605737d0a1c81e5c1b857",
+    "sourceSha256": "6bce1bc6f4a3bc9469a20d81ac8c4ed59a96a6e9c82605737d0a1c81e5c1b857",
+    "exportSha256": "3e5f5e733bd36c9ead21751a4708557e0b33a698015cec8589b839ffb491a62c",
+    "exportedAt": "2026-11-17T07:09:45.237926+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/13-parameter-gradient-storage.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/13-parameter-gradient-storage.md",
+    "sourceVersion": "757d38f042332fd3350d228d8c170a226b1646d629bc7a3a7346dff7f00337ce",
+    "sourceSha256": "757d38f042332fd3350d228d8c170a226b1646d629bc7a3a7346dff7f00337ce",
+    "exportSha256": "34dcb4675ad965584d390ef009e2028d4104264913e493b15958e4cda7e13db2",
+    "exportedAt": "2026-11-17T07:09:45.238933+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/14-activation-storage.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/14-activation-storage.md",
+    "sourceVersion": "0e57e60898302342bdb27ede46486e2f478fcbb3d82b88a81b56b70dec7af010",
+    "sourceSha256": "0e57e60898302342bdb27ede46486e2f478fcbb3d82b88a81b56b70dec7af010",
+    "exportSha256": "cde04c266efa976638bb4061b40fba75b667d69d8c784ccaae584f2d93205c4b",
+    "exportedAt": "2026-11-17T07:09:45.240095+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/15-optimizer-state-storage.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/15-optimizer-state-storage.md",
+    "sourceVersion": "3bc097b9bf14d3edceceb179e44523c96586e690404985ed387d8fd1823c12d4",
+    "sourceSha256": "3bc097b9bf14d3edceceb179e44523c96586e690404985ed387d8fd1823c12d4",
+    "exportSha256": "dadf30f5ce3b70cb3fb0882403aa97b8f29b3754a54325ee11a80989fc10cd52",
+    "exportedAt": "2026-11-17T07:09:45.241106+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/16-gradient-accumulation.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/16-gradient-accumulation.md",
+    "sourceVersion": "47b4ae01953cbd2c89729f4f97e283a072388c204df80db81e2b266be80bc320",
+    "sourceSha256": "47b4ae01953cbd2c89729f4f97e283a072388c204df80db81e2b266be80bc320",
+    "exportSha256": "d3558d59d0964d3385c521555d9cffbc3026e27af77c5d754d8c7207e0adf635",
+    "exportedAt": "2026-11-17T07:09:45.242509+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  },
+  {
+    "file": "notes/17-activation-checkpointing.md",
+    "sourceUri": "coral://vault/ai-infra/cs336/17-activation-checkpointing.md",
+    "sourceVersion": "d9b8412aa9151d75e487984dc170d203ef8b90e58def502aede955dc7715b0d3",
+    "sourceSha256": "d9b8412aa9151d75e487984dc170d203ef8b90e58def502aede955dc7715b0d3",
+    "exportSha256": "d13864bf97e14624677ec1b9c7604187d80921db042f76a28ac181d262f46465",
+    "exportedAt": "2026-11-17T07:09:45.243515+00:00",
+    "transformations": [
+      "local material_root replaced with public URL",
+      "HTML converted to SVG or Markdown table",
+      "verification status and source added"
+    ],
+    "verification": "pending-technical-review"
+  }
+]
