@@ -24,6 +24,7 @@
 - [优化器状态的存储](notes/15-optimizer-state-storage.md)
 - [用梯度累积处理多个小批次](notes/16-gradient-accumulation.md)
 - [用重算减少中间数据存储](notes/17-activation-checkpointing.md)
+- [LayerNorm的归一化轴与方差分母](notes/18-layernorm-variance-axes.md)
 
 ## 如何协作
 
