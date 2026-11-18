@@ -35,6 +35,32 @@ updated: 2026-11-07
 
 与原笔记的 Python 表达对应，`sum(losses)` 求出1.5，`len(losses)` 给出3，二者相除得到0.5。浮点结果有时显示成0.4000000000000001这类近似值，不表示平均规则改变。
 
+## 类别权重会改变mean的分母
+
+上面的有效位置数分母适用于无类别权重的token等权目标。固定PyTorch v2.9.0 CrossEntropyLoss，类别索引target、label_smoothing=0时，令V为非ignore_index目标集合，y_i为类别，w_c为类别权重，则：
+
+$$L=\frac{\sum_{i\in V}w_{y_i}(-\log p_{i,y_i})}{\sum_{i\in V}w_{y_i}}.$$
+
+假设两条有效目标的权重为1、3，未加权NLL为2、4，另有一条ignore_index目标。分子为1×2+3×4=14，分母为1+3=4，结果3.5；不是14/2=7，更不是14/3。忽略位置既不进分子，也不进分母。
+
+如果两条目标各分在一个microbatch，各批weighted mean分别为2、4，简单平均得3，不能恢复3.5。正确做法是保留分子与权重和，整体14/4；或者将批均值按各批权重和的比例1/4、3/4累积。若反向传播按sum loss进行，统一使用全组有效权重和作分母，组内参数不变；结合DDP时另处理rank平均，见[梯度累积](16-gradient-accumulation.md)。
+
+所有目标都忽略、或有效目标权重和为0时，不能按此式求均值。先判定共同分母，按训练策略一致跳过更新，避免NaN以及零梯度下动量/weight decay继续更新。权重应满足所需非负、有限口径；不能把没有定义的mean填成正常的零损失。
+
+### 浮点soft target不是同一个带权mean
+
+对于概率分布target q，单位置损失为-Σ_c w_c q_c log p_c，但reduction=mean按位置数平均，不按Σ_c w_c q_c归一化。即使q为one-hot，带权mean也可能与整数target不同：上述两条改为浮点one-hot后，sum仍为14，但mean为14/2=7。ignore_index仅适用于类别索引target；soft target要自行明确mask和分母。这里不讨论label_smoothing与类别权重同时启用的额外细节。
+
+### soft target的显式mask例子
+
+继续用浮点one-hot形式的两条有效目标，未归一化的带权损失分别为2、12。第三条是padding，先给它合法的有限logits和占位概率分布，再以reduction=none求每位置损失ℓ_i，使用mask m=[1,1,0]。若定义“有效位置等权的soft-target目标”，应计算Σ_i m_i ℓ_i/Σ_i m_i=14/2=7。先乘mask再对全部三个位置mean只得到14/3，错误地把padding放进分母。不要用ignore_index整数去填概率向量，也不能让padding先产生NaN再期待乘0消掉它。
+
+如果明确要复现这两个整数标签的带权均值，则另定义分母D=Σ_i m_i Σ_c w_c q_{i,c}=1+3=4，结果才是14/4=3.5；这是自己选择的权重归一化目标，不是概率target分支默认的mean。跨microbatch应分别累积分子与所选分母，再整体相除；全组mask和或D为0时应按相应策略跳过更新。先决定要保持哪个目标，才能判断分母2还是4。
+
+练习：权重和分别为2、6的两批，其weighted mean为1、5，整体weighted mean是多少？答案：(2×1+6×5)/(2+6)=4，而批等权平均是3。
+
+来源：[v2.9.0 CrossEntropyLoss两类target的公式](https://github.com/pytorch/pytorch/blob/v2.9.0/torch/nn/modules/loss.py)、[LossNLL.cpp实现](https://github.com/pytorch/pytorch/blob/v2.9.0/aten/src/ATen/native/LossNLL.cpp)。B起草带权mean、跨批次聚合与soft-target区别，A补写显式mask和两种分母算例。14/4=3.5、14/2=7和练习4已独立算术复核，未运行PyTorch训练。相关[问答#12](https://github.com/lw-liuwang/cs336-notes/discussions/12)；本节复核不等于整篇导入材料全部验证。
+
 ## 小练习
 
 三个有效位置的损失为0.2、0.4、0.6，另外两个填充位置不参与训练。平均损失是多少，分母应为3还是5？
