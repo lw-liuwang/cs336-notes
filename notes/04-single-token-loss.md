@@ -65,6 +65,30 @@ updated: 2026-11-07
 
 本节参考固定[PyTorch v2.9.0 CrossEntropyLoss](https://github.com/pytorch/pytorch/blob/v2.9.0/torch/nn/modules/loss.py)和[attention文档源码](https://github.com/pytorch/pytorch/blob/v2.9.0/torch/nn/functional.py)。B起草next-token配对、padding与内部shift说明，A补写EOS和不连续loss mask练习；已阅读固定实现并复核对齐和ln2算例，未运行语言模型训练。相关[问答#16](https://github.com/lw-liuwang/cs336-notes/discussions/16)，新增段落的核对不表示全篇原始材料已完成复核。
 
+## 直接从logits计算，不必先存概率
+
+上面的损失以目标概率p_y解释。若输入是同一位置的有限分数z_1,...,z_V，先代入softmax再展开，可得L=-ln p_y=logsumexp(z)-z_y。令m=max z_j，稳定写成：
+
+$$L=(m-z_y)+\ln\sum_j\exp(z_j-m).$$
+
+要对同一位置的词表求和，不能跨batch或时间位置。无类别权重、无标签平滑、单个整数目标时，这是同一个交叉熵；带权重/平滑的目标另按其定义组合。
+
+沿用目标编号2，取logits=(1000,1001,1002)。减最大值后是(-2,-1,0)，指数和约1.503214724，logsumexp约1002.407605964，故L≈.407605964；目标概率约.665240956，负对数一致。稳定形式直接算(m-z_y)=0与ln(1+exp(-1)+exp(-2))，无需先生成三个巨大的指数；这也减少先形成很大logsumexp再与相近z_y相减的风险，仍不保证任意低精度输入都无舍入损失。
+
+再看logits=(0,-1000)、目标编号1：L=1000+ln(1+exp(-1000))，在实数中略大于1000。普通浮点把exp(-1000)下溢成0时，上式仍给约1000；先softmax得到目标概率0再取负对数则得到无穷大。避免先物化极小概率与“把真实零概率改成有限损失”不同：这里原始logits有限，实数概率本来大于0。NaN、正无穷或全负无穷输入不满足本节有限分数前提。
+
+PyTorch v2.9.0的cross_entropy接收未归一化logits；先将probs=softmax(logits)再把probs作为该接口的input，会被当成一组新的logits，计算logsumexp(probs)-probs_y，改变目标。若已有对数概率，可按NLLLoss的输入契约使用，不能混用“概率”“对数概率”和“分数”。例如logits=(0,ln3)、目标1，正确概率为3/4、损失ln(4/3)≈.287682；误把(.25,.75)当logits时损失ln(1+exp(-.5))≈.474077。
+
+练习：上例把两个logits都加100，交叉熵变吗？答案：不变；共同常数从logsumexp和目标分数相消。有限精度若在相加时已丢失分数差，后面的稳定计算不能恢复那些信息。
+
+固定来源：[PyTorch v2.9.0 functional.py的cross_entropy与log_softmax](https://github.com/pytorch/pytorch/blob/v2.9.0/torch/nn/functional.py)、[同版本CrossEntropyLoss定义](https://github.com/pytorch/pytorch/blob/v2.9.0/torch/nn/modules/loss.py)。B补写代数、数值例与API输入契约；已阅读实现并用标量数学复算，未运行PyTorch或模型训练，不改变原始全篇复核状态。
+
+## 从稳定交叉熵得到每个logit的梯度
+
+对本节无权重、无平滑的单个整数目标，记S=Σk exp(z_k)，L=ln S-z_y。逐个求导得到∂L/∂z_j=exp(z_j)/S-1[j=y]=p_j-1[j=y]；实际数值计算p时仍可统一减去最大值，避免直接形成很大的指数。这个公式是同一目标的导数，不要求先把概率物化后再送回cross_entropy。
+
+取z=(0,ln3)、目标编号1，p=(1/4,3/4)，梯度为(1/4,-1/4)。所有logit梯度之和为Σp_j-1=0，与同时加常数不改变损失一致；沿每个坐标单独变化时则不必为0。标量中心差分核对得到约(.25,-.25)，未运行PyTorch自动求导。A补写推导及数值核对，不据此将整篇原始材料改标为已复核。
+
 ## 小练习
 
 模型给实际答案的概率从0.3提高到0.6。损失变大还是变小？如果另一个候选的概率更高，计算这个训练目标的损失时需要换成它吗？
