@@ -73,6 +73,28 @@ $$L=\frac{\sum_i n_i L_i}{N},\qquad \nabla L=\sum_i\frac{n_i}{N}\nabla L_i.$$
 
 参考：[PyTorch CrossEntropyLoss 的 reduction 与 ignore_index 定义](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html)、[梯度累积与清零](https://docs.pytorch.org/tutorials/recipes/recipes/zeroing_out_gradients.html)。本节为代数推导和假设算例，未声称运行过 PyTorch 训练实验。
 
+## DDP：rank均值不能直接当作全局token均值
+
+若DDP在W个rank之间平均参数梯度，rank r在本次更新整组中有n_r个有效目标、这些目标的本地均值为L_r，令N=Σ_r n_r。我们要的是L=Σ_r(n_r/N)L_r；因此各rank应对(W n_r/N)L_r反向传播，抵消DDP额外的1/W。若逐microbatch使用sum loss S_{r,i}，则每批共同系数为W/N。
+
+教学例子：W=2，两rank有效token为2、6，本地平均损失对同一标量参数的导数分别为2、6。不缩放时DDP给(2+6)/2=4；目标是(2×2+6×6)/8=5。对本地均值分别乘.5、1.5后，DDP平均得到(.5×2+1.5×6)/2=5。不能以本地n_r当全局分母，也不能在正确公式外再除W。
+
+处理顺序为：在相同更新组上同步有效计数all_reduce(SUM)，确定共同N；整组开始前清梯度；按统一分母累积梯度；完成通信和AMP unscale后再裁剪、更新。使用no_sync时须按其要求将相应前向也纳入上下文，并保证最终反向执行同步；本节没有提供可直接用于任意通信配置的训练脚本。
+
+### 两个microbatch怎样只同步一次
+
+固定W=2，每个rank各处理两批。rank0两批各1个token，批均值梯度分别为2、4；rank1两批各3个token，批均值梯度分别为6、8。全局N=8，对每批sum loss统一乘W/N=1/4。rank0累积出(1×2+1×4)/4=1.5，rank1累积出(3×6+3×8)/4=10.5，最终DDP平均为6，等于八个token的整体平均(2+4+18+24)/8。
+
+先在所有rank确定N并清梯度，第一批的前向和反向都放进no_sync上下文；第二批在上下文外做前向和反向，使这次反向同步先前累计的梯度。之后才unscale、裁剪和更新一次。每批已经按全组N归一化，不能再除microbatch数2；否则会错误地得到3。这里假定各rank按相同顺序完成两批、默认DDP平均，无join或自定义通信hook；批次数不齐需另行设计通信。
+
+某rank没有有效token时，不能求空mean，也不能0×NaN。应从合法前向构造图连通零sum损失，仍参与其他rank需要的DDP通信，并核对unused-parameter与动态图设置。若全局N=0，所有rank一致跳过更新；单rank自行跳过backward可能导致collective不匹配。带类别权重时将token计数替换为目标定义的权重和；自定义通信hook若改变平均方式须重新推导。
+
+零token反例：rank0整组无有效目标，rank1有6个且均值梯度为6。共同N=6，rank1的均值系数为2；rank0仍以图连通零sum完成所需通信，平均后(0+2×6)/2=6。若rank1直接backward未缩放均值，即便通信成功也只能得到3。
+
+练习：两rank各有1、3个token，本地均值梯度分别为8、0，正确的全局梯度是多少？本地缩放系数是什么？答案：(1×8+3×0)/4=2；系数.5、1.5，通信平均后(.5×8+1.5×0)/2=2。
+
+固定来源：[PyTorch v2.9.0 DDP文档源码](https://github.com/pytorch/pytorch/blob/v2.9.0/torch/nn/parallel/distributed.py)，说明跨节点梯度平均、sum loss的尺度区别及no_sync边界。本节由B起草公式和单批算例，A补写两批no_sync顺序、共同分母及零token反例；算例经本机算术核对，未运行分布式训练。其他原始章节仍按原复核状态管理。关联[完整技术问答](https://github.com/lw-liuwang/cs336-notes/discussions/11)。
+
 ## 小练习
 
 每个小批次有 2 条文本，累积 3 批后再更新一次参数。共使用几条文本？反向传播和参数更新分别执行几次？
