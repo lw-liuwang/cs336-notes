@@ -62,6 +62,31 @@ $$L_A(w)=(w-3)^2,\quad L_B(w)=(w-1)^2,\quad g_A(w)=2(w-3),\quad g_B(w)=2(w-1).$$
 
 本节是可复算的假设代数例子，未运行 PyTorch 训练。[PyTorch SGD 定义](https://docs.pytorch.org/docs/stable/generated/torch.optim.SGD.html)提供更新式；[autograd 梯度累加说明](https://docs.pytorch.org/tutorials/recipes/recipes/zeroing_out_gradients.html)说明 backward 会累加梯度。仅新增部分作上述核对，保留全篇待技术复核状态。
 
+## 学习率调度：先定义“步”的单位
+
+在梯度累积中，四次backward可能只有一次optimizer.step。若采用按参数更新计步的学习率计划，scheduler的总步数与warmup也应按实际更新计数，不能不加区分地用microbatch数。
+
+构造一个每次显式scheduler.step后将当前学习率乘.5的规则。初始化完成时lr=.1，四个microbatch才更新一次：
+
+| 顺序 | 首次参数更新前的调度调用数 | 首次更新使用lr | 更新后给下一次准备的lr |
+| --- | --- | --- | --- |
+| 整组backward后optimizer.step，再scheduler.step | 0 | .1 | .05 |
+| 每个microbatch先scheduler.step，第四次后才optimizer.step | 4 | .1×.5^4=.00625 | 取决于后续错误调用 |
+
+对update-based计划，合理顺序是整组开始清梯度，组内前向与缩放loss反向，完成必要的通信、AMP unscale、归一化及clip后执行优化器更新，确认本次更新确实发生后才推进scheduler。AMP溢出导致更新被跳过时，不能仅凭调用scaler.step就算新增一次参数更新；按epoch或指标调度的特殊scheduler则有自己的接口约定。
+
+固定[PyTorch v2.9.0 lr_scheduler.py](https://github.com/pytorch/pytorch/blob/v2.9.0/torch/optim/lr_scheduler.py)警告scheduler先于optimizer会跳过学习率计划首值。其构造器会执行_initial_step，所以上表从“初始化完成的lr=.1”开始计数；不是让读者把构造时调用再算一次。StepLR(step_size=1,gamma=.5)可用于理解这个构造规则，恢复checkpoint时还须核对last_epoch和优化器状态。
+
+例如每epoch有10个microbatch、累积上限4，若最后2批也组成一次有效更新，则本epoch更新3次，不是10次；若按规则丢弃尾组则为2次。无有效目标的组不更新时，不能仍用ceil(10/4)当作已发生次数。也可以有意按已处理token调度，但应将总预算、warmup及日志统一成token单位，不能混用。
+
+### warmup不能被一次跳步提前用掉
+
+另设一个明确的计划：第j次实际参数更新使用η_j=.1×min(j/2,1)，即前两次更新线性warmup，随后维持.1；它与上面的每步减半计划是两个独立构造。初始化给第1次更新准备lr=.05，成功更新后才为下一次准备学习率。10个microbatch仍按4、4、2分组，若三组均更新，实际使用.05、.1、.1，尾组只消耗一个更新步。
+
+若第二组因AMP溢出没有更新，日志应记录：第一组完成第1次更新、lr=.05；第二组尝试用已准备的.1但更新失败、不调用这套scheduler；第三个尾组才完成第2次更新、仍用.1。此时warmup结束，实际更新总数2，不是组数3。检查点若保存在第一组之后，应同时恢复“已完成1次更新”和“下次lr=.1”以及配套optimizer/scheduler状态，不能只靠读过4个microbatch来重建进度。实际加载顺序和调度器构造行为须按具体版本核对，避免重放初始化或额外调用step。
+
+练习：不发生跳步、尾组保留，初始lr=.1、每次成功更新后减半。10个microbatch按4、4、2分组，三次更新分别用什么lr？答案：.1、.05、.025；第三次后lr=.0125准备给下一次。B起草调度顺序和尾组计数，A补写warmup跳步与检查点进度例子；已阅读固定源码并独立算术核对，未运行调度器或训练实验。关联[讨论#17](https://github.com/lw-liuwang/cs336-notes/discussions/17)，本节核对不改全篇导入材料的复核状态。
+
 ## 小练习
 
 第一轮从 $w=2$ 更新到2.5后，下一轮能否继续沿用梯度−2？若一共重复五轮，并且每轮更新一次，最后执行了几次参数更新？
