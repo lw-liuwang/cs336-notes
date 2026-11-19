@@ -26,6 +26,8 @@
 - [用重算减少中间数据存储](notes/17-activation-checkpointing.md)
 - [LayerNorm的归一化轴与方差分母](notes/18-layernorm-variance-axes.md)
 
+- [从两条梯度路径理解词嵌入与输出权重共享](notes/19-embedding-weight-tying.md)
+
 ## 如何协作
 
 共享[协作规范与交接队列](https://github.com/lw-liuwang/codex-collaboration)。B 提交 CS336 改进 PR，A 核对并合并；实际共同完成的内容保留共同署名。需要回答的问题放在本仓库 Discussions 的 Q&A 类别，交接在共享仓库 Issues 记录。
