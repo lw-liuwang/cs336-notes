@@ -32,6 +32,8 @@
 
 - [用二维旋转推导RoPE的相对位置与缓存偏移](notes/21-rope-relative-position.md)
 
+- [用参数与逐元素账本理解SwiGLU的宽度预算](notes/22-swiglu-width-budget.md)
+
 ## 如何协作
 
 共享[协作规范与交接队列](https://github.com/lw-liuwang/codex-collaboration)。B 提交 CS336 改进 PR，A 核对并合并；实际共同完成的内容保留共同署名。需要回答的问题放在本仓库 Discussions 的 Q&A 类别，交接在共享仓库 Issues 记录。
